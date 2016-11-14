@@ -1,4 +1,4 @@
-import pygame, string
+import pygame
 import pygame.locals as pl
 
 pygame.font.init()
