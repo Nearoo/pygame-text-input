@@ -1,6 +1,6 @@
 import pygame
 import pygame.locals as pl
-
+import os.path
 pygame.font.init()
 
 
@@ -33,7 +33,8 @@ class TextInput:
         self.text_color = text_color
         self.font_size = font_size
         self.input_string = "" # Inputted text
-        self.font_object = pygame.font.Font(pygame.font.match_font(font_family), font_size)
+        if not os.path.isfile(font_family): font_family = pygame.font.match_font(font_family)
+        self.font_object = pygame.font.Font(font_family, font_size)
 
         # Text-surface will be created during the first update call:
         self.surface = pygame.Surface((1, 1))
