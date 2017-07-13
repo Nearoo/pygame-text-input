@@ -1,6 +1,6 @@
 
 """
-Copyright 2017, Silas Gyger, All rights reserved.
+Copyright 2017, Silas Gyger, silasgyger@gmail.com, All rights reserved.
 """
 
 import pygame
