@@ -1,3 +1,8 @@
+
+"""
+Copyright 2017, Silas Gyger, All rights reserved.
+"""
+
 import pygame
 import pygame.locals as pl
 import os.path
