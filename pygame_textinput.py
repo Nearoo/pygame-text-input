@@ -156,6 +156,6 @@ class TextInput:
 
     def clear_text(self):
         self.input_string=""
-        self.curssor_position=0
+        self.cursor_position=0
         
      
