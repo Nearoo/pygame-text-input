@@ -55,5 +55,6 @@ font_family | Name or path of the font that should be used. If none or one that 
 font_size | Size of the font in pixels. Default is 35.
 antialias | (bool) Declare if antialias should be used on text or not. True uses more CPU cycles.
 text_color | The color of the text.
+cursor_color | The color of the cursor.
 repeat_keys_initial_ms | Time in ms until the key presses get repeated when a key is not released
 repeat_keys_interval_ms | Time in ms between key presses if key is not released
