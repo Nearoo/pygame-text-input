@@ -31,6 +31,7 @@ class TextInput:
             font_size: Size of the font in pixels
             antialias: (bool) Determines if antialias is used on fonts or not
             text_color: Color of the text
+            cursor_color: Color of the cursor
             repeat_keys_initial_ms: ms until the keydowns get repeated when a key is not released
             repeat_keys_interval_ms: ms between to keydown-repeats if key is not released
         """
@@ -156,4 +157,7 @@ class TextInput:
         self.cursor_surface.fill(color)
 
     def clear_text(self):
-        self.input_string=""    
+        self.input_string=""
+        self.cursor_position=0
+        
+     
