@@ -29,15 +29,14 @@ class TextInput:
             repeat_keys_initial_ms=400,
             repeat_keys_interval_ms=35):
         """
-        Args:
-            initial_input: Initial input text value. Default is empty string
-            font_family: Name or path of the font that should be used. Default is pygame-font
-            font_size: Size of the font in pixels
-            antialias: (bool) Determines if antialias is used on fonts or not
-            text_color: Color of the text
-            cursor_color: Color of the cursor
-            repeat_keys_initial_ms: ms until the keydowns get repeated when a key is not released
-            repeat_keys_interval_ms: ms between to keydown-repeats if key is not released
+        :param initial_string: Initial text to be displayed
+        :param font_family: name or list of names for font (see pygame.font.match_font for precise format)
+        :param font_size:  Size of font in pixels
+        :param antialias: Determines if antialias is applied to font (uses more processing power)
+        :param text_color: Color of text (duh)
+        :param cursor_color: Color of cursor
+        :param repeat_keys_initial_ms: Time in ms before keys are repeated when held
+        :param repeat_keys_interval_ms: Interval between key press repetition when helpd
         """
 
         # Text related vars:
