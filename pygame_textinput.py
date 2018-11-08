@@ -55,7 +55,7 @@ class TextInput:
         self.surface = pygame.Surface((1, 1))
         self.surface.set_alpha(0)
 
-        # Vars to make key downs repeat after user pressed a key for some time:
+        # Vars to make keydowns repeat after user pressed a key for some time:
         self.keyrepeat_counters = {}  # {event.key: (counter_int, event.unicode)} (look for "***")
         self.keyrepeat_intial_interval_ms = repeat_keys_initial_ms
         self.keyrepeat_interval_ms = repeat_keys_interval_ms
