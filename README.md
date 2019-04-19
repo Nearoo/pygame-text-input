@@ -51,6 +51,7 @@ Arguments for the initalisation of the `TextInput`-object (all of them are optio
 
 argument | description
 ---|---
+initial_string | Initial text to be displayed
 font_family | Name or path of the font that should be used. If none or one that doesn't exist is specified, the pygame default font is used.
 font_size | Size of the font in pixels. Default is 35.
 antialias | (bool) Declare if antialias should be used on text or not. True uses more CPU cycles.
