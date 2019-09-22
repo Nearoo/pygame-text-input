@@ -28,7 +28,7 @@ class TextInput:
             cursor_color=(0, 0, 1),
             repeat_keys_initial_ms=400,
             repeat_keys_interval_ms=35,
-            max_string_length=1000):
+            max_string_length=-1):
         """
         :param initial_string: Initial text to be displayed
         :param font_family: name or list of names for font (see pygame.font.match_font for precise format)
@@ -112,7 +112,7 @@ class TextInput:
                 elif event.key == pl.K_HOME:
                     self.cursor_position = 0
 
-                elif len(self.input_string) < self.max_string_length:
+                elif len(self.input_string) < self.max_string_length or self.max_string_length == -1:
                     # If no special key is pressed, add unicode of key to input_string
                     self.input_string = (
                         self.input_string[:self.cursor_position]
