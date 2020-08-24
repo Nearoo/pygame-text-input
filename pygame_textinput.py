@@ -28,7 +28,8 @@ class TextInput:
             cursor_color=(0, 0, 1),
             repeat_keys_initial_ms=400,
             repeat_keys_interval_ms=35,
-            max_string_length=-1):
+            max_string_length=-1,
+            password=False):
         """
         :param initial_string: Initial text to be displayed
         :param font_family: name or list of names for font (see pygame.font.match_font for precise format)
@@ -46,6 +47,7 @@ class TextInput:
         self.text_color = text_color
         self.font_size = font_size
         self.max_string_length = max_string_length
+        self.password = password
         self.input_string = initial_string  # Inputted text
 
         if not os.path.isfile(font_family):
@@ -141,7 +143,10 @@ class TextInput:
                 pygame.event.post(pygame.event.Event(pl.KEYDOWN, key=event_key, unicode=event_unicode))
 
         # Re-render text surface:
-        self.surface = self.font_object.render(self.input_string, self.antialias, self.text_color)
+        string = self.input_string
+        if self.password:
+            string = "*" * len(self.input_string)
+        self.surface = self.font_object.render(string, self.antialias, self.text_color)
 
         # Update self.cursor_visible
         self.cursor_ms_counter += self.clock.get_time()
