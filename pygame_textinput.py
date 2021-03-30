@@ -143,29 +143,35 @@ class TextInput:
                 event_key, event_unicode = key, self.keyrepeat_counters[key][1]
                 pygame.event.post(pygame.event.Event(pl.KEYDOWN, key=event_key, unicode=event_unicode))
 
+        self.clock.tick()
+        return False
+
+    def get_surface(self, cursor_visible=True):
         # Re-render text surface:
         string = self.input_string
         if self.password:
             string = "*" * len(self.input_string)
         self.surface = self.font_object.render(string, self.antialias, self.text_color)
-
-        # Update self.cursor_visible
-        self.cursor_ms_counter += self.clock.get_time()
-        if self.cursor_ms_counter >= self.cursor_switch_ms:
-            self.cursor_ms_counter %= self.cursor_switch_ms
-            self.cursor_visible = not self.cursor_visible
-
+        
+        if cursor_visible:
+            # Update self.cursor_visible
+            self.cursor_ms_counter += self.clock.get_time()
+            if self.cursor_ms_counter >= self.cursor_switch_ms:
+                self.cursor_ms_counter %= self.cursor_switch_ms
+                self.cursor_visible = not self.cursor_visible
+        else:
+            self.cursor_visible = False
+        
         if self.cursor_visible:
-            cursor_y_pos = self.font_object.size(self.input_string[:self.cursor_position])[0]
+            cursor_y_pos = self.font_object.size(string[:self.cursor_position])[0]
             # Without this, the cursor is invisible when self.cursor_position > 0:
             if self.cursor_position > 0:
                 cursor_y_pos -= self.cursor_surface.get_width()
+            
+            # Without this, if string is empty then cursor is not visible
+            if self.surface.get_width() == 0:
+                self.surface = pygame.Surface((int(self.font_size / 20 + 1), self.font_size))
             self.surface.blit(self.cursor_surface, (cursor_y_pos, 0))
-
-        self.clock.tick()
-        return False
-
-    def get_surface(self):
         return self.surface
 
     def get_text(self):
@@ -185,14 +191,16 @@ class TextInput:
         self.cursor_position = 0
 
 
-
 if __name__ == "__main__":
     pygame.init()
 
     # Create TextInput-object
-    textinput = TextInput()
+    textinput = TextInput(font_family="C:\\Windows\\Fonts\\arial.ttf", font_size=40, max_string_length=20)
 
-    screen = pygame.display.set_mode((1000, 200))
+    textinput_box = pygame.Rect(43, 26, 620, 50)
+    text_input_active = True
+
+    screen = pygame.display.set_mode((700, 100))
     clock = pygame.time.Clock()
 
     while True:
@@ -203,10 +211,31 @@ if __name__ == "__main__":
             if event.type == pygame.QUIT:
                 exit()
 
-        # Feed it with events every frame
-        textinput.update(events)
+            # Treats the string as password on pressing key UP
+            if event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_UP:
+                    textinput.password = not textinput.password
+
+            # Does not take inputs if mouse button pressed outside of box
+            if event.type == pygame.MOUSEBUTTONDOWN:
+                if textinput_box.collidepoint(event.pos):
+                    text_input_active = True
+                else:
+                    text_input_active = False
+        
+        pygame.draw.rect(screen, (0, 0, 0), textinput_box, 2)
+
+        # Feed it with events every frame if active
+        if text_input_active:
+            textinput.update(events)
+            text_surface = textinput.get_surface()
+        
+        # Renders the surface without cursor if inactive
+        else:
+            text_surface = textinput.get_surface(False)
+        
         # Blit its surface onto the screen
-        screen.blit(textinput.get_surface(), (10, 10))
+        screen.blit(text_surface, (50, 30))
 
         pygame.display.update()
-        clock.tick(30)
+        clock.tick(60)
