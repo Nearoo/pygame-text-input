@@ -228,11 +228,9 @@ if __name__ == "__main__":
         # Feed it with events every frame if active
         if text_input_active:
             textinput.update(events)
-            text_surface = textinput.get_surface()
         
-        # Renders the surface without cursor if inactive
-        else:
-            text_surface = textinput.get_surface(False)
+        # Renders the surface with cursor if active or without cursor if inactive
+        text_surface = textinput.get_surface(text_input_active)
         
         # Blit its surface onto the screen
         screen.blit(text_surface, (50, 30))
