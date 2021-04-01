@@ -174,8 +174,7 @@ class TextInput:
         self.clock.tick()
         return False
 
-    def get_surface(self, cursor_visible=True):
-        
+    def get_surface(self):
         return self.surface
 
     def get_text(self):
