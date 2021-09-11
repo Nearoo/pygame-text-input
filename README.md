@@ -13,7 +13,7 @@ This module provides two utility classes that simplify entering text using pygam
 Simples way is using pypi:
 
 ```
-python3 -m pip install pygame_textinput
+python3 -m pip install pygame-textinput
 ```
 
 # Usage
