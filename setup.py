@@ -4,7 +4,7 @@ from setuptools import setup
 here = pathlib.Path(__file__).parent
 readme = (here / "README.md").read_text()
 setup(
-    name="pygame-textinput-2",
+    name="pygame-textinput",
     version="1.0.0",
     description="Enter text using pygame",
     long_description=readme,

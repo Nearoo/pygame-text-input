@@ -135,7 +135,7 @@ class TextInputVisualizer:
             cursor_color = (0, 0, 0)
             ):
 
-        self.manager = manager
+        self._manager = manager
         self._font_object = font_object
         self._antialias = antialias
         self._font_color = font_color
@@ -159,6 +159,15 @@ class TextInputVisualizer:
     @value.setter
     def value(self, v):
         self.manager.value = v
+    
+    @property
+    def manager(self):
+        """ Get / set the underlying `TextInputManager` for this instance"""
+        return self._manager
+    
+    @manager.setter
+    def manager(self, v):
+        self._manager = v
     
     @property
     def surface(self):
@@ -291,9 +300,10 @@ class TextInputVisualizer:
             cursor_rect = pygame.Rect(cursor_y, 0, self._cursor_width, self.font_object.get_height())
             self._surface.fill(self._cursor_color, cursor_rect)
 
-# The example from the repo README:
-###############
 
+######################################
+#  The example from the repo README: #
+######################################
 
 if __name__ == "__main__":
     pygame.init()

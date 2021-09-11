@@ -1,15 +1,16 @@
 # Pygame Text Input Module
 
-This module provides two utility classes that simply entereing text using pygame. It has two components:
-* A class `TextInputManager` that can be used to just _manage_ inputted text by users - use this if you want to draw the text yourself
-* A class `TextInputVisualizer` which not only manages, but also draws the inserted text - all that's required is to pass all events returned by `pygame.event.get()` every frame, and blit its `surface` attribute on the screen.
+This module provides two utility classes that simplify entering text using pygame. The classes are:
+* `TextInputVisualizer` which can be used to both manage and draw text input. Simply pass all events returned by `pygame.event.get()` to it every frame, and blit its `surface` attribute on the screen.
+*  `TextInputManager` that can be used to just manage inputted text, with no visual aspect. Used by `TextInputVisualizer` behind the scenes.
+
 
 
 ![Example of module in use](https://i.imgur.com/h7a64Y2.gif)
 
 # Installation
 
-Available on PYPI:
+Simples way is using pypi:
 
 ```
 python3 -m pip install pygame_textinput
@@ -19,12 +20,11 @@ python3 -m pip install pygame_textinput
 
 ## Visualizer
 
-You can instanciate `TextInputVisualizer` without any arguments. Then, feed all `pygame` events to its `update` method every frame, and blit it's `surface` property. Here's a minimal example:
+The easiest way is to `TextInputVisualizer` without any arguments. Then, feed all `pygame` events to its `update` method every frame, and blit it's `surface` property to the screen. Here's a minimal example:
 
 
 
 ```python
-#!/usr/bin/python3
 import pygame_textinput
 import pygame
 pygame.init()
@@ -51,22 +51,22 @@ while True:
     pygame.display.update()
     clock.tick(30)
 ```
-
-In this new version, you have to watch for "return" presses by the user yourself, e.g. like this:
+### Notes on the newer version:
+* You have to watch for "return" presses by the user yourself, e.g. like this:
 
 ```python
 if [event for event in events if event.type == pygame.KEYDOWN ]:
     print("Oooweee")
 ```
 
-Also, contrary to the old version, key-stroke repeats are not manually introduced anymore, since they can now be enabled within `pygame` directly:
+* Contrary to the old version, key-stroke repeats are not manually introduced anymore, since they can now be enabled within `pygame` directly:
 
 ```python
 pygame.key.set_repeat(200, 25) # press every 50 ms after waiting 200 ms
 ```
 
 
-This new version has also been optimized such that you can **modify any fields on the fly** and the actual surface will only re-render if you access it using `textinput.surface` - and even then only if you actually modified any values!
+This new version has also been optimized such that you can **modify any fields on the fly** and the actual surface will only re-render if you access it using `textinput.surface` - and only if you actually modified any values.
 
 
 ## Arguments / Fields:
@@ -78,15 +78,15 @@ manager | The `TextInputManager` used to manage the input
 font_object | The `pygame.font.Font` object used for rendering
 antialias |  whether to render the font antialiased or not
 font_color | color of font rendered
-cursor_blink_interal | The interval of the cursor blinking, in ms
+cursor_blink_interval | The interval of the cursor blinking, in ms
 cursor_width | The width of the cursor, in pixels
 cursor_color | The color of the cursor
 
 # Manager
 
-If you prefer to draw the text on the screen yourself, you can use `TextInputManager` to only manage the string that has been inserted so far.
+If you prefer to draw the text on the screen yourself, you can use `TextInputManager` to only manage the string that has been typed so far.
 
-Like `TextInputVisualizer`, you feed its `update` method all events received by `pygame.event.get()` you want it to process. `TextInputVisualizer` does this for you if you pass it a `TextInputManager`.
+Like `TextInputVisualizer`, you feed its `update` method all events received by `pygame.event.get()` which you want it to process. `TextInputVisualizer` does this for you inside its `update` method if you pass it a `TextInputManager`.
 
 ## Arguments:
 Argument | Description
@@ -104,7 +104,7 @@ manager = TextInputManager(validator=lambda input: len(input) <= 5)
 Field | Description
 ---|---
 value | The inserted value so far. When change, `cursor_pos` is kept as far as possible.
-cursor_pos | The position of the cursor. `0` is before the first character, `len(manager.value)` after the last.
+cursor_pos | The position of the cursor. `0` is before the first character, `len(manager.value)` the position after the last. Values outside this range are clamped.
 
 
 # Example
