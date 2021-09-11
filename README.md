@@ -1,25 +1,36 @@
 # Pygame Text Input Module
 
-This small module can be used to write text in pygame. It includes a blinking cursor that can be moved using the left and right as well as the home and the end button. Any key can be pressed for an extended period of time to make that key re-enter itself many times a second.
+This module provides two utility classes that simply entereing text using pygame. It has two components:
+* A class `TextInputManager` that can be used to just _manage_ inputted text by users - use this if you want to draw the text yourself
+* A class `TextInputVisualizer` which not only manages, but also draws the inserted text - all that's required is to pass all events returned by `pygame.event.get()` every frame, and blit its `surface` attribute on the screen.
 
-Here's an example of the module in use using the [Ubuntu font](http://font.ubuntu.com/):
-![Example of module in use](http://i.imgur.com/enuCPEY.gif)
+
+![Example of module in use](https://i.imgur.com/h7a64Y2.gif)
+
+# Installation
+
+Available on PYPI:
+
+```
+python3 -m pip install pygame_textinput
+```
 
 # Usage
 
-The module is very easy to use. Simply create an instance of `InputText` in your code and then feed its `update`-method with pygame-events every frame. The surface with the text and the cursor can then be gotten using `get_surface()`.
+## Visualizer
 
-Here's a small example that displays a white window with the `InputText`-surface on it:
+You can instanciate `TextInputVisualizer` without any arguments. Then, feed all `pygame` events to its `update` method every frame, and blit it's `surface` property. Here's a minimal example:
 
 
-```
+
+```python
 #!/usr/bin/python3
 import pygame_textinput
 import pygame
 pygame.init()
 
 # Create TextInput-object
-textinput = pygame_textinput.TextInput()
+textinput = pygame_textinput.TextInputVisualizer()
 
 screen = pygame.display.set_mode((1000, 200))
 clock = pygame.time.Clock()
@@ -35,27 +46,122 @@ while True:
     # Feed it with events every frame
     textinput.update(events)
     # Blit its surface onto the screen
-    screen.blit(textinput.get_surface(), (10, 10))
+    screen.blit(textinput.surface, (10, 10))
 
     pygame.display.update()
     clock.tick(30)
 ```
-If you want to catch the user input after the user hits `Return`, simply evaluate the return value of the `update()`-method - it is always `False` except for when the user hits `Return`, then it's `True`. To get the inputted text, use `get_text()`. Example:
+
+In this new version, you have to watch for "return" presses by the user yourself, e.g. like this:
+
+```python
+if [event for event in events if event.type == pygame.KEYDOWN ]:
+    print("Oooweee")
 ```
-if textinput.update(events):
-    print(textinput.get_text())
+
+Also, contrary to the old version, key-stroke repeats are not manually introduced anymore, since they can now be enabled within `pygame` directly:
+
+```python
+pygame.key.set_repeat(200, 25) # press every 50 ms after waiting 200 ms
 ```
+
+
+This new version has also been optimized such that you can **modify any fields on the fly** and the actual surface will only re-render if you access it using `textinput.surface` - and even then only if you actually modified any values!
+
+
+## Arguments / Fields:
+All these values can be both specified as arguments to the constructor and modified at later time by setting them as attributes (e.g. `textinput.font_color = (255, 0, 0)`). The surface itself will only re-render once it is accessed via `textinput.surface`. 
+
+Argument | Description
+---|---
+manager | The `TextInputManager` used to manage the input
+font_object | The `pygame.font.Font` object used for rendering
+antialias |  whether to render the font antialiased or not
+font_color | color of font rendered
+cursor_blink_interal | The interval of the cursor blinking, in ms
+cursor_width | The width of the cursor, in pixels
+cursor_color | The color of the cursor
+
+# Manager
+
+If you prefer to draw the text on the screen yourself, you can use `TextInputManager` to only manage the string that has been inserted so far.
+
+Like `TextInputVisualizer`, you feed its `update` method all events received by `pygame.event.get()` you want it to process. `TextInputVisualizer` does this for you if you pass it a `TextInputManager`.
 
 ## Arguments:
-Arguments for the initalisation of the `TextInput`-object (all of them are optional)
-
-argument | description
+Argument | Description
 ---|---
-initial_string | Initial text to be displayed
-font_family | Name or path of the font that should be used. If none or one that doesn't exist is specified, the pygame default font is used.
-font_size | Size of the font in pixels. Default is 35.
-antialias | (bool) Declare if antialias should be used on text or not. True uses more CPU cycles.
-text_color | The color of the text.
-cursor_color | The color of the cursor.
-repeat_keys_initial_ms | Time in ms until the key presses get repeated when a key is not released
-repeat_keys_interval_ms | Time in ms between key presses if key is not released
+initial | The initial value (text)
+validator | A function taking a `string` and returning a `bool`. Every time the input value is modified, this function is called; if the function returns `True`, the input is accepted, otherwise it is ignored.
+
+So say you want to only allow input to up to 5 letters, you could do that with
+
+```python
+manager = TextInputManager(validator=lambda input: len(input) <= 5)
+```
+
+## Fields
+Field | Description
+---|---
+value | The inserted value so far. When change, `cursor_pos` is kept as far as possible.
+cursor_pos | The position of the cursor. `0` is before the first character, `len(manager.value)` after the last.
+
+
+# Example
+
+Here's an example that shows most features:
+
+```python
+import pygame
+import pygame.locals as pl
+
+pygame.init()
+
+# No arguments needed to get started
+textinput = TextInputVisualizer()
+
+# But more customization possible: Pass your own font object
+font = pygame.font.SysFont("Consolas", 55)
+# Create own manager with custom input validator
+manager = TextInputManager(validator = lambda input: len(input) <= 5)
+# Pass these to constructor
+textinput_custom = TextInputVisualizer(manager=manager, font_object=font)
+# Other customizations:
+textinput_custom.cursor_width = 4
+textinput_custom.cursor_blink_interval = 400 # blinking interval in ms
+textinput_custom.antialias = False
+textinput_custom.font_color = (0, 85, 170)
+
+screen = pygame.display.set_mode((1000, 200))
+clock = pygame.time.Clock()
+
+# Pygame now allows natively to enable key repeat:
+pygame.key.set_repeat(200, 25)
+
+while True:
+    screen.fill((225, 225, 225))
+
+    events = pygame.event.get()
+    for event in events:
+        if event.type == pygame.QUIT:
+            exit()
+
+    # Feed it with events every frame
+    textinput.update(events)
+    textinput_custom.update(events)
+
+    # Get its surface to blit onto the screen
+    screen.blit(textinput.surface, (10, 10))
+    screen.blit(textinput_custom.surface, (10, 50))
+
+    # Modify attributes on the fly - the surface is only rerendered when .surface is accessed & if values changed
+    textinput_custom.font_color = [(c+10)%255 for c in textinput_custom.font_color]
+
+    # Check if user pressed return
+    if [ev for ev in events if ev.type == pygame.KEYDOWN and ev.key == pygame.K_RETURN]:
+        print(f"User pressed enter! Input so far: {textinput.value}")
+
+    pygame.display.update()
+    clock.tick(30)
+
+```
