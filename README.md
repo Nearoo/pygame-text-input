@@ -55,8 +55,10 @@ while True:
 * You have to watch for "return" presses by the user yourself, e.g. like this:
 
 ```python
-if [ev for ev in events if ev.type == pygame.KEYDOWN and ev.key == pygame.K_RETURN]:
-    print("Oooweee")
+for event in events:
+    ...
+    if event.type == pygame.KEYDOWN and event.key == pygame.K_RETURN:
+        print("Oooweee")
 ```
 
 * Contrary to the old version, key-stroke repeats are not manually introduced anymore, since they can now be enabled within `pygame` directly:
@@ -126,7 +128,7 @@ font = pygame.font.SysFont("Consolas", 55)
 manager = TextInputManager(validator = lambda input: len(input) <= 5)
 # Pass these to constructor
 textinput_custom = TextInputVisualizer(manager=manager, font_object=font)
-# Other customizations:
+# Customize much more
 textinput_custom.cursor_width = 4
 textinput_custom.cursor_blink_interval = 400 # blinking interval in ms
 textinput_custom.antialias = False
@@ -142,9 +144,6 @@ while True:
     screen.fill((225, 225, 225))
 
     events = pygame.event.get()
-    for event in events:
-        if event.type == pygame.QUIT:
-            exit()
 
     # Feed it with events every frame
     textinput.update(events)
@@ -157,11 +156,15 @@ while True:
     # Modify attributes on the fly - the surface is only rerendered when .surface is accessed & if values changed
     textinput_custom.font_color = [(c+10)%255 for c in textinput_custom.font_color]
 
-    # Check if user pressed return
-    if [ev for ev in events if ev.type == pygame.KEYDOWN and ev.key == pygame.K_RETURN]:
-        print(f"User pressed enter! Input so far: {textinput.value}")
+    # Check if user is exiting or pressed return
+    for event in events:
+        if event.type == pygame.QUIT:
+            exit()
+
+        if event.type == pygame.KEYDOWN and event.key == pygame.K_RETURN:
+            print(f"User pressed enter! Input so far: {textinput.value}")
 
     pygame.display.update()
     clock.tick(30)
-
+    
 ```

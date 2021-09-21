@@ -333,9 +333,6 @@ if __name__ == "__main__":
         screen.fill((225, 225, 225))
 
         events = pygame.event.get()
-        for event in events:
-            if event.type == pygame.QUIT:
-                exit()
 
         # Feed it with events every frame
         textinput.update(events)
@@ -348,9 +345,13 @@ if __name__ == "__main__":
         # Modify attributes on the fly - the surface is only rerendered when .surface is accessed & if values changed
         textinput_custom.font_color = [(c+10)%255 for c in textinput_custom.font_color]
 
-        # Check if user pressed return
-        if [ev for ev in events if ev.type == pygame.KEYDOWN and ev.key == pygame.K_RETURN]:
-            print(f"User pressed enter! Input so far: {textinput.value}")
+        # Check if user is exiting or pressed return
+        for event in events:
+            if event.type == pygame.QUIT:
+                exit()
+
+            if event.type == pygame.KEYDOWN and event.key == pygame.K_RETURN:
+                print(f"User pressed enter! Input so far: {textinput.value}")
 
         pygame.display.update()
         clock.tick(30)
