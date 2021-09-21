@@ -39,14 +39,15 @@ while True:
     screen.fill((225, 225, 225))
 
     events = pygame.event.get()
-    for event in events:
-        if event.type == pygame.QUIT:
-            exit()
 
     # Feed it with events every frame
     textinput.update(events)
     # Blit its surface onto the screen
     screen.blit(textinput.surface, (10, 10))
+
+    for event in events:
+        if event.type == pygame.QUIT:
+            exit()
 
     pygame.display.update()
     clock.tick(30)
@@ -94,7 +95,7 @@ Like `TextInputVisualizer`, you feed its `update` method all events received by 
 Argument | Description
 ---|---
 initial | The initial value (text)
-validator | A function taking a `string` and returning a `bool`. Every time the input value is modified, this function is called; if the function returns `True`, the input is accepted, otherwise it is ignored.
+validator | A function taking a `string` and returning a `bool`. Every time an input modifies the value, this function is called with the modified value as an argument; if the function returns `True`, the input is accepted, otherwise the input is ignored.
 
 So say you want to only allow input to up to 5 letters, you could do that with
 
