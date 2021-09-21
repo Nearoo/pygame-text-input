@@ -126,8 +126,8 @@ class TextInputVisualizer:
     :param cursor_color: The color of the cursor
     """
     def __init__(self,
-            manager = TextInputManager(),
-            font_object = pygame.font.Font(pygame.font.get_default_font(), 25),
+            manager = None,
+            font_object = None,
             antialias = True,
             font_color = (0, 0, 0),
             cursor_blink_interval = 300,
@@ -135,8 +135,8 @@ class TextInputVisualizer:
             cursor_color = (0, 0, 0)
             ):
 
-        self._manager = manager
-        self._font_object = font_object
+        self._manager = TextInputManager() if manager is None else manager
+        self._font_object = pygame.font.Font(pygame.font.get_default_font(), 25) if font_object is None else font_object
         self._antialias = antialias
         self._font_color = font_color
         
@@ -215,7 +215,7 @@ class TextInputVisualizer:
     @cursor_visible.setter
     def cursor_visible(self, v):
         self._cursor_visible = v
-        self._cursor_blink_interval = 0
+        self._last_blink_toggle = 0
         self._require_rerender()
     
     @property
