@@ -10,7 +10,7 @@ This module provides two utility classes that simplify entering text using pygam
 
 # Installation
 
-Simples way is using pypi:
+Simplest way is using pypi:
 
 ```
 python3 -m pip install pygame-textinput
@@ -55,7 +55,7 @@ while True:
 * You have to watch for "return" presses by the user yourself, e.g. like this:
 
 ```python
-if [event for event in events if event.type == pygame.KEYDOWN ]:
+if [ev for ev in events if ev.type == pygame.KEYDOWN and ev.key == pygame.K_RETURN]:
     print("Oooweee")
 ```
 
