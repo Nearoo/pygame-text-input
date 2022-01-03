@@ -18,11 +18,11 @@ python3 -m pip install pygame-textinput
 
 # Usage
 
-## Visualizer
+## `TextInputVisualizer`
 
-The easiest way is to `TextInputVisualizer` without any arguments. Then, feed all `pygame` events to its `update` method every frame, and blit it's `surface` property to the screen. Here's a minimal example:
+### Example
 
-
+All arguments to the constructor are optional. Once constructed, call `update` every frame with all pygame events as an argument, then blit it's `surface` field to the screen, like so:
 
 ```python
 import pygame_textinput
@@ -52,6 +52,43 @@ while True:
     pygame.display.update()
     clock.tick(30)
 ```
+
+## Arguments:
+
+All arguments are optional. 
+
+Argument | Description
+---|---
+manager | The `TextInputManager` used to manage the input
+font_object | The `pygame.font.Font` object used for rendering
+antialias |  whether to render the font antialiased or not
+font_color | color of font rendered
+cursor_blink_interval | The interval of the cursor blinking, in ms
+cursor_width | The width of the cursor, in pixels
+cursor_color | The color of the cursor
+
+## Fields
+
+All arguments above are also fields that can be accessed and modified on the fly, e.g. like this:
+
+```python
+textinput.cursor_width = 12
+textinput.value = "Hello, World!"
+print(textinput.font_color)
+```
+
+Field | Description
+--- | ---
+value | (string) The text entered so far
+surface | The `pygame.Surface` object with entered text & cursor on it and a transparent background. **Cannot be set.**
+cursor_visible | (bool) wether the cursor is currently visible or not. Flips every `cursor_interval` ms as long as `update` is called continuously. 
+
+## Methods
+
+Method | Description
+--- | ---
+update(events) | Call this method every frame for as long as input should be processed and `cursor_visible` should be updated.
+
 ### Notes on the newer version:
 * You have to watch for "return" presses by the user yourself, e.g. like this:
 
@@ -72,20 +109,7 @@ pygame.key.set_repeat(200, 25) # press every 50 ms after waiting 200 ms
 This new version has also been optimized such that you can **modify any fields on the fly** and the actual surface will only re-render if you access it using `textinput.surface` - and only if you actually modified any values.
 
 
-## Arguments / Fields:
-All these values can be both specified as arguments to the constructor and modified at later time by setting them as attributes (e.g. `textinput.font_color = (255, 0, 0)`). The surface itself will only re-render once it is accessed via `textinput.surface`. 
-
-Argument | Description
----|---
-manager | The `TextInputManager` used to manage the input
-font_object | The `pygame.font.Font` object used for rendering
-antialias |  whether to render the font antialiased or not
-font_color | color of font rendered
-cursor_blink_interval | The interval of the cursor blinking, in ms
-cursor_width | The width of the cursor, in pixels
-cursor_color | The color of the cursor
-
-# Manager
+# `TextInputManager`
 
 If you prefer to draw the text on the screen yourself, you can use `TextInputManager` to only manage the string that has been typed so far.
 
@@ -110,9 +134,9 @@ value | The inserted value so far. When change, `cursor_pos` is kept as far as p
 cursor_pos | The position of the cursor. `0` is before the first character, `len(manager.value)` the position after the last. Values outside this range are clamped.
 
 
-# Example
+# More Examples
 
-Here's an example that shows most features:
+## Most features
 
 ```python
 import pygame
@@ -169,3 +193,4 @@ while True:
     clock.tick(30)
     
 ```
+
