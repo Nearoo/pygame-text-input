@@ -121,6 +121,7 @@ class TextInputVisualizer:
     :param font_object: a pygame.font.Font object used for rendering
     :param antialias: whether to render the font antialiased or not
     :param font_color: color of font rendered
+    :param font_size: size of font rendered
     :param cursor_blink_interal: the interval of the cursor blinking, in ms
     :param cursor_width: The width of the cursor, in pixels
     :param cursor_color: The color of the cursor
@@ -130,13 +131,14 @@ class TextInputVisualizer:
             font_object = None,
             antialias = True,
             font_color = (0, 0, 0),
+            font_size = 25,
             cursor_blink_interval = 300,
             cursor_width = 3,
             cursor_color = (0, 0, 0)
             ):
 
         self._manager = TextInputManager() if manager is None else manager
-        self._font_object = pygame.font.Font(pygame.font.get_default_font(), 25) if font_object is None else font_object
+        self._font_object = pygame.font.Font(pygame.font.get_default_font(), font_size) if font_object is None else font_object
         self._antialias = antialias
         self._font_color = font_color
         

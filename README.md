@@ -63,6 +63,7 @@ manager | The `TextInputManager` used to manage the input
 font_object | The `pygame.font.Font` object used for rendering
 antialias |  whether to render the font antialiased or not
 font_color | color of font rendered
+font_size | size of font rendered
 cursor_blink_interval | The interval of the cursor blinking, in ms
 cursor_width | The width of the cursor, in pixels
 cursor_color | The color of the cursor
