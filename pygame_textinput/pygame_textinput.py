@@ -4,6 +4,7 @@ Copyright 2021, Silas Gyger, silasgyger@gmail.com, All rights reserved.
 Borrowed from https://github.com/Nearoo/pygame-text-input under the MIT license.
 """
 
+from typing import List, Callable
 import pygame
 import pygame.locals as pl
 
@@ -28,7 +29,7 @@ class TextInputManager:
 
     def __init__(self,
                 initial = "",
-                validator = lambda x: True):
+                validator: Callable[[str], bool] = lambda x: True):
         
         self.left = initial # string to the left of the cursor
         self.right = "" # string to the right of the cursor
@@ -57,7 +58,7 @@ class TextInputManager:
         self.left = complete[:value]
         self.right = complete[value:]
     
-    def update(self, events):
+    def update(self, events: List[pygame.event.Event]):
         """
         Update the interal state with fresh pygame events.
         Call this every frame with all events returned by `pygame.event.get()`.
@@ -247,7 +248,7 @@ class TextInputVisualizer:
     def cursor_blink_interval(self, v):
         self._cursor_blink_interval = v
 
-    def update(self, events: pygame.event.Event):
+    def update(self, events: List[pygame.event.Event]):
         """
         Update internal state.
         
