@@ -20,5 +20,5 @@ setup(
     ],
     packages=["pygame_textinput"],
     include_package_data=True,
-    install_requires=["pygame"],
+    install_requires=["pygame-ce"],
 )
